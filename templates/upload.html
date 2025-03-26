@@ -5,37 +5,93 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Upload Medical Report</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <script>
+        function updateSymptomInput() {
+            let selectedSymptoms = [];
+            let options = document.getElementById("symptomSelect").options;
+            
+            // Add selected dropdown symptoms to input
+            for (let i = 0; i < options.length; i++) {
+                if (options[i].selected) {
+                    selectedSymptoms.push(options[i].value);
+                }
+            }
+
+            // Get manually entered symptoms
+            let customSymptoms = document.getElementById("customSymptoms").value.trim();
+            if (customSymptoms) {
+                selectedSymptoms.push(customSymptoms);
+            }
+
+            // Set value in text field and hidden input
+            document.getElementById("customSymptoms").value = selectedSymptoms.join(", ");
+            document.getElementById("symptomInput").value = selectedSymptoms.join(",");
         }
+    </script>
+    <style>
         body {
-            font-family: Arial, sans-serif;
-            background: url("https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExM3FxMzF2MXE5aHdrbDF1ZW9wZ2cxd3lnNGVwaG5pbWs1b2Q3Z3ZmMiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/xEQdDzzHsVhK3Mhcqa/giphy.gif") no-repeat center center fixed;
+            font-family: "Poppins", sans-serif;
+            background: url("https://media4.giphy.com/media/xEQdDzzHsVhK3Mhcqa/giphy.gif") no-repeat center center fixed;
             background-size: cover;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
+            padding: 20px;
         }
         .container {
             text-align: center;
-            background: rgba(255, 255, 255, 0.8); /* Semi-transparent background */
+            background: rgba(255, 255, 255, 0.9);
             padding: 30px;
-            border-radius: 15px;
-            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+            width: 90%;
+            max-width: 500px;
         }
         h1 {
             color: #333;
+            font-weight: 600;
         }
-        form {
-            margin-top: 20px;
-        }
-        input[type="file"] {
+        select, input, button {
             margin: 10px 0;
+            width: 100%;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
         }
+
+        /* 🔹 Styled Dropdown */
+        select {
+            background: #fff;
+            color: #333;
+            font-size: 16px;
+            height: 120px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        select:hover {
+            border-color: #4CAF50;
+            box-shadow: 0px 0px 8px rgba(76, 175, 80, 0.5);
+        }
+        select option {
+            padding: 10px;
+        }
+
+        /* 🔹 Custom Symptoms Input */
+        #customSymptoms {
+            background: #f9f9f9;
+            border: 1px solid #aaa;
+            font-size: 14px;
+            padding: 8px;
+            transition: border 0.3s ease;
+        }
+        #customSymptoms:focus {
+            border-color: #4CAF50;
+            outline: none;
+        }
+
         button {
             background-color: #4CAF50;
             color: white;
@@ -43,7 +99,7 @@
             padding: 12px 25px;
             font-size: 16px;
             cursor: pointer;
-            border-radius: 5px;
+            transition: background 0.3s;
         }
         button:hover {
             background-color: #45a049;
@@ -54,6 +110,17 @@
     <div class="container">
         <h1>Upload Medical Report</h1>
         <form action="{{ url_for('upload_files') }}" method="post" enctype="multipart/form-data">
+            <label for="symptomSelect">Select Symptoms:</label>
+            <select id="symptomSelect" name="symptoms" multiple onchange="updateSymptomInput()">
+                {% for symptom in symptoms_list %}
+                    <option value="{{ symptom }}">{{ symptom }}</option>
+                {% endfor %}
+            </select>
+            
+            <label for="customSymptoms">Selected & Custom Symptoms:</label>
+            <input type="text" id="customSymptoms" name="custom_symptoms" placeholder="Select or type symptoms" oninput="updateSymptomInput()">
+
+            <input type="hidden" id="symptomInput" name="selected_symptoms">
             <input type="file" name="files" multiple required>
             <button type="submit">Upload & Analyze</button>
         </form>
