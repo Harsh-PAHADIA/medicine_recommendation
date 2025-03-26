@@ -5,12 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Medical Report Analysis</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
         body {
             font-family: "Poppins", sans-serif;
             background: url("https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExZGsxNGlmamI5ODVmMWhvazQwaHp4eTBqbzNyemtuMzMwZW9vMHU4OSZlcD12MV9pbnJlYWxfZ2lmX2J5X2lkJmN0PWc/7VzgMsB6FLCilwS30v/giphy.gif") no-repeat center center fixed;
@@ -22,95 +18,85 @@
             padding: 20px;
         }
         .container {
-            text-align: center;
+            max-width: 800px;
             background: rgba(255, 255, 255, 0.9);
-            padding: 30px;
-            border-radius: 15px;
+            padding: 20px;
+            border-radius: 10px;
             box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
-            max-width: 90%;
-            width: 1000px;
-            overflow: auto;
         }
         h1 {
+            text-align: center;
             color: #333;
-            margin-bottom: 15px;
-            font-size: 28px;
             font-weight: 600;
         }
-        h2 {
-            color: #444;
+        .analysis-section {
             margin-top: 20px;
-            font-size: 22px;
-            font-weight: 500;
-        }
-        pre {
-            background: #f8f9fa;
             padding: 15px;
-            border-radius: 10px;
-            text-align: left;
-            max-height: 600px;
-            overflow-y: auto;
-            white-space: pre-wrap; /* Ensures text wraps */
-            word-wrap: break-word;
-            font-family: "Courier New", monospace;
-            font-size: 14px;
-            color: #2c3e50;
-            border-left: 5px solid #4CAF50;
-            line-height: 1.6;
-        }
-        button {
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            padding: 12px 25px;
-            font-size: 16px;
-            cursor: pointer;
+            background: #eef;
+            border-left: 4px solid #4CAF50;
             border-radius: 5px;
-            margin-top: 10px;
-            transition: 0.3s ease-in-out;
+            margin-bottom: 15px;
         }
-        button:hover {
-            background-color: #45a049;
+        .analysis-section h2 {
+            color: #4CAF50;
+            font-size: 18px;
         }
         .image-container {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 10px;
+            text-align: center;
             margin-top: 20px;
         }
-        .image-container img {
-            max-width: 180px;
-            border-radius: 10px;
-            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
-            transition: transform 0.3s;
+        img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 5px;
+            margin-top: 10px;
         }
-        .image-container img:hover {
-            transform: scale(1.05);
+        .back-btn {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        .back-btn a {
+            text-decoration: none;
+            color: white;
+            background: #4CAF50;
+            padding: 12px 25px;
+            border-radius: 5px;
+            font-size: 16px;
+            transition: background 0.3s;
+        }
+        .back-btn a:hover {
+            background: #45a049;
         }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>Medical Report Analysis</h1>
-
-        <a href="{{ url_for('upload_page') }}">
-            <button>Upload Another Report</button>
-        </a>
-
-        {% if analysis %}
-        <h2>AI Analysis</h2>
-        <pre>{{ analysis }}</pre>
-        {% endif %}
-
+        <div class="analysis-section">
+            <h2>Contradiction Check:</h2>
+            <p>{{ analysis.contradiction }}</p>
+        </div>
+        <div class="analysis-section">
+            <h2>Most Likely Diagnosis:</h2>
+            <p>{{ analysis.likely_diagnosis }}</p>
+        </div>
+        <div class="analysis-section">
+            <h2>Patient Condition Summary:</h2>
+            <p>{{ analysis.summary }}</p>
+        </div>
+       
         {% if image_paths %}
-        <h2>Uploaded Images</h2>
         <div class="image-container">
-            {% for img in image_paths %}
-            <img src="{{ img }}" alt="Uploaded Image">
+            <h2>Uploaded Files:</h2>
+            {% for image_path in image_paths %}
+                <img src="{{ image_path }}" alt="Uploaded Image">
             {% endfor %}
         </div>
         {% endif %}
+        <div class="back-btn">
+            <a href="{{ url_for('upload_page') }}">Upload Another Report</a>
+        </div>
     </div>
 </body>
 </html>
