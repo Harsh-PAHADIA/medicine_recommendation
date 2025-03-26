@@ -73,10 +73,7 @@
 <body>
     <div class="container">
         <h1>Medical Report Analysis</h1>
-        <div class="analysis-section">
-            <h2>Contradiction Check:</h2>
-            <p>{{ analysis.contradiction }}</p>
-        </div>
+      
         <div class="analysis-section">
             <h2>Most Likely Diagnosis:</h2>
             <p>{{ analysis.likely_diagnosis }}</p>
@@ -84,6 +81,14 @@
         <div class="analysis-section">
             <h2>Patient Condition Summary:</h2>
             <p>{{ analysis.summary }}</p>
+        </div>
+        <div class="analysis-section">
+    <h2>Recommended Medicines:</h2>
+    <p>{{ analysis.medications }}</p>
+</div>
+          <div class="analysis-section">
+            <h2>Contradiction Check:</h2>
+            <p>{{ analysis.contradiction }}</p>
         </div>
        
         {% if image_paths %}
