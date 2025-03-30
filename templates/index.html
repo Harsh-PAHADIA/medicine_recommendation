@@ -4,12 +4,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Medical Report Analysis</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link href="https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExczRiMm9pbXF6dzc4NWR2cHpkNDB5a24yemkzNDRpZXRmZHlid2pqOSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/ydiPwws6eBQVshTtgL/giphy.gif">
     <style>
-        body {
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
             font-family: "Poppins", sans-serif;
-            background: url("https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExZGsxNGlmamI5ODVmMWhvazQwaHp4eTBqbzNyemtuMzMwZW9vMHU4OSZlcD12MV9pbnJlYWxfZ2lmX2J5X2lkJmN0PWc/7VzgMsB6FLCilwS30v/giphy.gif") no-repeat center center fixed;
+        }
+
+        body {
+            background: url("https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExczRiMm9pbXF6dzc4NWR2cHpkNDB5a24yemkzNDRpZXRmZHlid2pqOSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/ydiPwws6eBQVshTtgL/giphy.gif") 
+                        no-repeat center center fixed;
             background-size: cover;
             display: flex;
             justify-content: center;
@@ -17,91 +23,82 @@
             height: 100vh;
             padding: 20px;
         }
+
         .container {
-            max-width: 800px;
-            background: rgba(255, 255, 255, 0.9);
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
-        }
-        h1 {
+            width: 90%;
+            max-width: 600px;
+            background: rgba(255, 255, 255, 0.15);
+            padding: 25px;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            color: white;
             text-align: center;
-            color: #333;
-            font-weight: 600;
+            max-height: 90vh; /* Ensures scrolling works */
+            overflow-y: auto; /* Enables vertical scrolling */
         }
-        .analysis-section {
-            margin-top: 20px;
-            padding: 15px;
-            background: #eef;
-            border-left: 4px solid #4CAF50;
-            border-radius: 5px;
+
+        h2 {
+            font-weight: 600;
             margin-bottom: 15px;
         }
-        .analysis-section h2 {
-            color: #4CAF50;
-            font-size: 18px;
+
+        .result {
+            margin-top: 15px;
+            padding: 15px;
+            background: rgba(0, 0, 0, 60%);
+            border-radius: 8px;
+            text-align: left;
         }
-        .image-container {
-            text-align: center;
-            margin-top: 20px;
-        }
-        img {
-            max-width: 100%;
-            height: auto;
-            border-radius: 5px;
-            margin-top: 10px;
-        }
-        .back-btn {
-            display: flex;
-            justify-content: center;
-            margin-top: 20px;
-        }
-        .back-btn a {
-            text-decoration: none;
-            color: white;
-            background: #4CAF50;
-            padding: 12px 25px;
-            border-radius: 5px;
+        
+        .result p {
             font-size: 16px;
-            transition: background 0.3s;
+            margin-bottom: 10px;
         }
-        .back-btn a:hover {
-            background: #45a049;
+
+        .highlight {
+            color: #ffcc00;
+            background-color: rgba(255, 255, 0, 0.2);
+            padding: 2px 5px;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+
+        a {
+            display: block;
+            margin-top: 15px;
+            text-decoration: none;
+            font-weight: bold;
+            color: white;
+            padding: 10px;
+            background-color: #007bff;
+            border-radius: 8px;
+            transition: background 0.3s ease;
+        }
+
+        a:hover {
+            background-color: #0056b3;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Medical Report Analysis</h1>
-      
-        <div class="analysis-section">
-            <h2>Most Likely Diagnosis:</h2>
-            <p>{{ analysis.likely_diagnosis }}</p>
+        <h2>Medical Report Analysis</h2>
+
+        {% if analysis %}
+        <div class="result">
+            <p><strong><span class="highlight">Disease Confirmation:</span></strong> {{ analysis.confirmation }}</p>
+            <p><strong><span class="highlight">Most Likely Diagnosis:</span></strong> {{ analysis.diagnosis }}</p>
+            <p><strong><span class="highlight">Condition Summary:</span></strong> {{ analysis.summary }}</p>
+            <p><strong><span class="highlight">Recommended Medications:</span></strong> {{ analysis.medications }}</p>
+            <p><strong><span class="highlight">Pre-Appointment Preparation:</span></strong> {{ analysis.pre_appointment }}</p>
+            <p><strong><span class="highlight">Home Care Advice:</span></strong> {{ analysis.home_care }}</p>
         </div>
-        <div class="analysis-section">
-            <h2>Patient Condition Summary:</h2>
-            <p>{{ analysis.summary }}</p>
-        </div>
-        <div class="analysis-section">
-    <h2>Recommended Medicines:</h2>
-    <p>{{ analysis.medications }}</p>
-</div>
-          <div class="analysis-section">
-            <h2>Contradiction Check:</h2>
-            <p>{{ analysis.contradiction }}</p>
-        </div>
-       
-        {% if image_paths %}
-        <div class="image-container">
-            <h2>Uploaded Files:</h2>
-            {% for image_path in image_paths %}
-                <img src="{{ image_path }}" alt="Uploaded Image">
-            {% endfor %}
-        </div>
+        {% else %}
+            <p>No analysis available.</p>
         {% endif %}
-        <div class="back-btn">
-            <a href="{{ url_for('upload_page') }}">Upload Another Report</a>
-        </div>
+        
+        <a href="/">Upload Another File</a>
     </div>
 </body>
 </html>
