@@ -4,34 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Upload Medical Report</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
-    <script>
-        function updateSymptomInput() {
-            let selectedSymptoms = [];
-            let options = document.getElementById("symptomSelect").options;
-            
-            // Add selected dropdown symptoms to input
-            for (let i = 0; i < options.length; i++) {
-                if (options[i].selected) {
-                    selectedSymptoms.push(options[i].value);
-                }
-            }
-
-            // Get manually entered symptoms
-            let customSymptoms = document.getElementById("customSymptoms").value.trim();
-            if (customSymptoms) {
-                selectedSymptoms.push(customSymptoms);
-            }
-
-            // Set value in text field and hidden input
-            document.getElementById("customSymptoms").value = selectedSymptoms.join(", ");
-            document.getElementById("symptomInput").value = selectedSymptoms.join(",");
-        }
-    </script>
     <style>
-        body {
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
             font-family: "Poppins", sans-serif;
+        }
+
+        body {
             background: url("https://media4.giphy.com/media/xEQdDzzHsVhK3Mhcqa/giphy.gif") no-repeat center center fixed;
             background-size: cover;
             display: flex;
@@ -40,88 +22,81 @@
             height: 100vh;
             padding: 20px;
         }
+
         .container {
+            max-width: 600px;
+            background: rgba(255, 255, 255, 0.15);
+            padding: 25px;
+            border-radius: 15px;
+            backdrop-filter: blur(40px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            color: white;
             text-align: center;
-            background: rgba(255, 255, 255, 0.9);
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
-            width: 90%;
-            max-width: 500px;
         }
-        h1 {
-            color: #333;
+
+        h2 {
             font-weight: 600;
+            margin-bottom: 15px;
         }
-        select, input, button {
-            margin: 10px 0;
+
+        label {
+            font-weight: 400;
+            display: block;
+            margin-top: 10px;
+        }
+
+        input[type="file"] {
             width: 100%;
             padding: 10px;
-            border-radius: 5px;
-            border: 1px solid #ccc;
-        }
-
-        /* 🔹 Styled Dropdown */
-        select {
-            background: #fff;
-            color: #333;
-            font-size: 16px;
-            height: 120px;
+            margin-top: 8px;
+            border: none;
             border-radius: 8px;
+            background: rgba(255, 255, 255, 0.7);
             cursor: pointer;
-            transition: all 0.3s ease;
-        }
-        select:hover {
-            border-color: #4CAF50;
-            box-shadow: 0px 0px 8px rgba(76, 175, 80, 0.5);
-        }
-        select option {
-            padding: 10px;
         }
 
-        /* 🔹 Custom Symptoms Input */
-        #customSymptoms {
-            background: #f9f9f9;
-            border: 1px solid #aaa;
-            font-size: 14px;
-            padding: 8px;
-            transition: border 0.3s ease;
-        }
-        #customSymptoms:focus {
-            border-color: #4CAF50;
-            outline: none;
+        .symptoms-list {
+            background: rgba(255, 255, 255, 0.3);
+            padding: 10px;
+            border-radius: 8px;
+            margin-top: 10px;
+            max-height: 150px;
+            overflow-y: auto;
+            text-align: left;
         }
 
         button {
-            background-color: #4CAF50;
+            width: 100%;
+            padding: 10px;
+            margin-top: 10px;
+            background-color: #007bff;
             color: white;
+            font-weight: bold;
             border: none;
-            padding: 12px 25px;
-            font-size: 16px;
+            border-radius: 8px;
             cursor: pointer;
-            transition: background 0.3s;
+            transition: background 0.3s ease;
         }
+
         button:hover {
-            background-color: #45a049;
+            background-color: #0056b3;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Upload Medical Report</h1>
-        <form action="{{ url_for('upload_files') }}" method="post" enctype="multipart/form-data">
-            <label for="symptomSelect">Select Symptoms:</label>
-            <select id="symptomSelect" name="symptoms" multiple onchange="updateSymptomInput()">
-                {% for symptom in symptoms_list %}
-                    <option value="{{ symptom }}">{{ symptom }}</option>
-                {% endfor %}
-            </select>
+        <h2>Upload Medical Report</h2>
+        <form action="/upload" method="post" enctype="multipart/form-data">
+            <label for="files">Choose files (PDF, JPG, PNG):</label>
+            <input type="file" name="files" multiple accept=".pdf,.jpg,.png,.jpeg" required>
             
-            <label for="customSymptoms">Selected & Custom Symptoms:</label>
-            <input type="text" id="customSymptoms" name="custom_symptoms" placeholder="Select or type symptoms" oninput="updateSymptomInput()">
-
-            <input type="hidden" id="symptomInput" name="selected_symptoms">
-            <input type="file" name="files" multiple required>
+            <label>Select Symptoms:</label>
+            <div class="symptoms-list">
+                {% for symptom in symptoms_list %}
+                    <input type="checkbox" name="symptoms" value="{{ symptom }}"> {{ symptom }}<br>
+                {% endfor %}
+            </div>
+            
             <button type="submit">Upload & Analyze</button>
         </form>
     </div>
