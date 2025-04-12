@@ -19,8 +19,8 @@ UPLOAD_FOLDER = "static/uploads"
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
 client = openai.OpenAI(
-    base_url="",
-    api_key=""
+    base_url=" ",
+    api_key=" "
 )
 
 ALLOWED_EXTENSIONS = {"png", "jpg", "jpeg", "pdf"}
@@ -50,14 +50,16 @@ for model in models.values():
 # Predict disease based on user symptoms
 def predict_disease(user_symptoms):
     symptom_list = sorted(list(X.columns))
-    user_input_vector = np.zeros(len(symptom_list))
-    for symptom in user_symptoms:
-        if symptom in symptom_list:
-            user_input_vector[symptom_list.index(symptom)] = 1
-    user_input_vector = user_input_vector.reshape(1, -1)
+    user_input_dict = {symptom: 0 for symptom in X.columns}
     
-    knn_probs = models["KNeighbors"].predict_proba(user_input_vector)[0]
-    nb_probs = models["MultinomialNB"].predict_proba(user_input_vector)[0]
+    for symptom in user_symptoms:
+        if symptom in user_input_dict:
+            user_input_dict[symptom] = 1
+    
+    user_input_df = pd.DataFrame([user_input_dict])
+    
+    knn_probs = models["KNeighbors"].predict_proba(user_input_df)[0]
+    nb_probs = models["MultinomialNB"].predict_proba(user_input_df)[0]
     
     knn_top_3 = np.argsort(knn_probs)[-3:][::-1]
     nb_top_3 = np.argsort(nb_probs)[-3:][::-1]
@@ -67,6 +69,7 @@ def predict_disease(user_symptoms):
     
     likely_diseases = list(dict.fromkeys(list(knn_diseases) + list(nb_diseases)))
     return likely_diseases
+
 
 # Extract text from medical reports
 def extract_text_from_file(file_path):
